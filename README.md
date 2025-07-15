@@ -1162,7 +1162,28 @@ Momentum는 현재의 인사 및 평가 체계에 안주하지 않고,
 
 ### 3. 📌 이슈 관리
 
-- 🧾 이슈 템플릿 면" width="550"/>
+- 🧾 이슈 템플릿 구성
+
+  <img src="assets/images/git_issue_template.png" alt="wbs" width="550"/>
+
+  <details> 
+  <summary>⭐ 기능 템플릿 (Feature)</summary> 
+    <img src="assets/images/feature_template.png" alt="wbs" width="550"/>
+  </details>
+  
+  <details> 
+  <summary>♻️ 리팩토링 템플릿 (Refactor)</summary>
+    <img src="assets/images/refactor_template.png" alt="wbs" width="550"/>
+  </details>
+
+  <details> 
+  <summary>🐛 버그 템플릿 (Feature)</summary>
+    <img src="assets/images/bug_template.png" alt="wbs" width="550"/>
+  </details>
+<br>
+
+- 🖥️ 이슈 예시 화면
+ <img src="assets/images/git_issues.png" alt="wbs" width="550"/>
 
 <br>
 
