@@ -2020,6 +2020,8 @@ Momentum는 현재의 인사 및 평가 체계에 안주하지 않고,
 
 ### 13. 🗄️ 빌드 및 배포
 
+- **📅 CI/CD 계획서**
+  <img src="assets/images/CI,CD plan.png" alt="CI/CD 계획서" />
 
 <br>
 
