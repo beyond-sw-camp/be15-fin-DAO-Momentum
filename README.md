@@ -2020,10 +2020,71 @@ Momentum는 현재의 인사 및 평가 체계에 안주하지 않고,
 
 ### 13. 🗄️ 빌드 및 배포
 
-- **📅 CI/CD 계획서**
-  <img src="assets/images/CI,CD plan.png" alt="CI/CD 계획서" />
+### 🔄 전체 개요
 
-<br>
+본 파이프라인은 GitHub Actions, AWS(ECR, S3, EKS), ArgoCD를 이용해 백엔드 및 프론트엔드 애플리케이션을 자동 빌드 및 배포하는 구조로 설계되어 있습니다.
+
+---
+
+### ✅ **단계별 구성 및 세부 내용**
+
+### 백엔드 CI/CD
+
+#### **① 개발자 개발 및 커밋**
+
+- 개발자는 각각의 GitHub 저장소(BE/FE)에 소스 코드를 작성하고 커밋합니다.
+
+#### **② GitHub Actions**
+
+- 백엔드 저장소에 커밋/PR 등 이벤트 발생 시 GitHub Actions가 트리거됩니다.
+- 주요 작업:
+    - Gradle을 통한 백엔드 애플리케이션 빌드
+    - JAR 파일 생성 및 테스트 수행
+
+#### **③ Docker 이미지 빌드**
+
+- 빌드된 백엔드 애플리케이션을 기반으로 Docker 이미지를 생성합니다.
+- `Dockerfile`을 활용하여 이미지 생성
+
+#### **④ ECR 푸시**
+
+- 빌드된 Docker 이미지를 AWS ECR(Elastic Container Registry)로 푸시합니다.
+- 이미지 태그에는 버전 또는 커밋 SHA를 사용하여 관리
+
+#### **⑤ Manifest Repository 업데이트**
+
+- 배포용 `k8s manifest` 파일이 존재하는 별도의 저장소(MANIFEST repo)를 업데이트합니다.
+- Deployment, Service 등의 yaml 파일의 이미지 태그를 새로 푸시된 버전으로 변경
+
+#### **⑥ ArgoCD가 Manifest Repository 감시 및 동기화**
+
+- ArgoCD는 GitOps 방식으로 MANIFEST repo를 지속적으로 감시합니다.
+- 변경된 manifest 파일을 감지하면 EKS 클러스터에 자동 적용합니다.
+
+#### **⑦ EKS가 ECR에서 이미지 Pull**
+
+- Manifest에서 지정한 이미지가 ECR에 존재하면 해당 이미지를 EKS로 pull하여 pod를 재시작하거나 롤링 업데이트 수행
+
+### 프론트엔드 CI/CD
+
+#### **① Node.js 환경 설정**
+
+- GitHub Actions 워크플로우 시작 시, Node.js 환경을 설정합니다.
+- Vue 3 프로젝트 기준으로 Node.js 18 버전을 사용합니다.
+
+#### **② GitHub Actions (FE) - 프론트엔드 빌드 트리거**
+
+- 프론트엔드 저장소에 커밋/PR 등 이벤트 발생 시 GitHub Actions가 트리거됩니다.
+- 주요 작업:
+    - NPM install 및 빌드 수행 (`npm run build`)
+    - 정적 파일 생성 (`dist`, `build` 디렉토리 등)
+
+#### **③ S3 업로드**
+
+- 빌드된 정적 웹 리소스를 Amazon S3에 업로드합니다.
+- S3 버킷은 프론트엔드 배포용 호스팅으로 사용됨 (CloudFront 연계 가능)
+
+  <img src="assets/images/CI,CD plan.png" alt="CI/CD 계획서" />
 
 <br>
 
